@@ -1,55 +1,68 @@
 import React from "react";
 //import components
+import App from "../App";
+import ButtonContainer from "../ButtonContainer";
 import { connect } from 'react-redux';
 import {  Table } from "react-bootstrap";
 import { getPeople } from './peopleThunk';
+import { Redirect } from 'react-router-dom';
 
-import Spinner from '../../components/Spinner';
 
 //stylesheet
 import "../../styles/sass/body.scss";
+import "../../styles/sass/search.scss";
 
-function cellFormatter(cell) {
-    return (!cell ? <Spinner /> : `${cell}`);
-}
 
 class People extends React.Component{
   constructor(props) {
       super(props)
       this.state = { //state is by default an object
          people: false,
-
+         redirect: false,
+         search: '',
+         setSearch: false
 
       }
     }
+    setRedirect = () => {
+     this.setState({
+       redirect: true
+     })
+    }
 
+    renderRedirect = () => {
+      if (this.state.redirect) {
+        return <Redirect to='/' />
+      }
+    }
   componentDidMount = () => {
       const { getPeople } = this.props;
       getPeople();
     }
-  keyPress(e){
-    if(e.keyCode === "enter"){
-         this.setState({
-             loading: true
-         });
-         this.setState({
-             searchQuery:e.target.value
-         })
+  handleChange=(e)=>{
+    this.setState({ [e.target.name]: e.target.value })
   };
-}
 
-
-
-
-
+  onSearch = (e) => { this.setState({ setSearch: true}) }
 
   renderTableData() {
-    if(this.props.people.results.length > 0)
-      return this.props.people.results.map((person, data) => {
-          const { id, name, birth_year, gender } = person //destructuring
+    let { people } = this.props;
+    let results = people.results;
+    let { setSearch, search } = this.state;
+     try {
+       const searchRE = new RegExp(search, 'i');
+       if(setSearch) {
+         results = people.results.filter(person =>
+           (person.name.match(searchRE) || person.gender === search//after string has been fully typed
+       ))
+
+     }}
+       catch(err){ console.log(err) }
+    if(results.length > 0)
+      return results.map((person, data) => {
+          const { name, birth_year, gender } = person //destructuring
           return (
             <tr key={data}>
-               <td>{person.id}</td>
                <td>{person.name}</td>
                <td>{person.birth_year}</td>
                <td>{person.gender}</td>
@@ -62,34 +75,36 @@ class People extends React.Component{
 
   render(){
     const  { people } = this.props;
-
-
     return(
-     <div className="container">
-          <div className="search-bar">
-            <input type="text" placeholder="Search..."/>
-            <div className="search"></div>
-          </div>
-            {people.count ?
-         <div className="body-container">
-           <Table responsive striped bordered hover>
-             <thead >
-               <tr>
-                 <th>Id</th>
-                 <th>FullName</th>
-                 <th>Birth Year</th>
-                 <th>Gender</th>
-               </tr>
-               </thead>
-               <tbody>
-               {this.renderTableData()}
-               </tbody>
-           </Table>
-
+     <div className="">
+         <div className="body-head">
+           <App />
+           <div className="search-bar">
+             <input type="text"  name='search' value={this.state.search} onChange={this.handleChange}  placeholder='search by name & gender' onKeyDown={(e) => this.onSearch(e)} />
+             <div className="search"></div>
+           </div>
          </div>
-       :
-       <p>loading</p>
-     }
+         <div className="container">
+             {people.count ?
+             <div className="body-container">
+               <Table responsive striped bordered hover>
+                 <thead >
+                   <tr>
+                     <th>FullName</th>
+                     <th>Birth Year</th>
+                    <th>Gender</th>
+                  </tr>
+               </thead>
+              <tbody>
+                {this.renderTableData()}
+              </tbody>
+              </Table>
+              <ButtonContainer />
+             </div>
+                :
+                <p>loading</p>
+                }
+         </div>
      </div>
     );
   }
@@ -104,7 +119,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getPeople: () => dispatch(getPeople()),
-
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(People);

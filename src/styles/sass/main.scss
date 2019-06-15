@@ -9,7 +9,18 @@ body {
   background-color: lighten($highlight-color, 10%);
 
 }
+a {
+  text-decoration: none;
+  color: $highlight-color;
 
+  &:hover {
+    color: darken($highlight-color, 10%);
+  }
+}
+.navbar-expand{
+  height:70px;
+
+}
 .btn-style{
   font-size: $body-font-size;
   cursor: pointer;
@@ -76,4 +87,24 @@ body {
   margin-top: 100px;
   text-align: center;
 
+}
+@media only screen and (min-width : 411px) and (max-width : 780px)
+{
+  .btn-style{
+    font-size: $body-font-size;
+    cursor: pointer;
+    $color: black;
+    color: $color;
+    background-color: $body-bg;
+    .btn-style:hover {
+      background-color: blue;
+    }
+    .btn-style:active {
+      box-shadow: none;
+    }
+    button.btn-style btn btn-primary{
+      color: #fff;
+      background-color: #007bff;
+    }
+  }
 }

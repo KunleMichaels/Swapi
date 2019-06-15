@@ -1,50 +1,68 @@
 import React from "react";
 //import components
+import App from "../App";
 import { connect } from 'react-redux';
 import {  Table } from "react-bootstrap";
 import { getPlanets } from './planetsThunk';
+import { Redirect } from 'react-router-dom';
 
-import Spinner from '../../components/Spinner';
 
 //stylesheet
 import "../../styles/sass/body.scss";
+import "../../styles/sass/search.scss";
 
-function cellFormatter(cell) {
-    return (!cell ? <Spinner /> : `${cell}`);
-}
+
 
 class Planets extends React.Component{
   constructor(props) {
       super(props)
       this.state = { //state is by default an object
          planets: false,
-
+         search: '',
+         redirect: false,
+         setSearch: false
       }
     }
+    setRedirect = () => {
+     this.setState({
+       redirect: true
+     })
+    }
 
+    renderRedirect = () => {
+      if (this.state.redirect) {
+        return <Redirect to='/' />
+      }
+    }
   componentDidMount = () => {
       const { getPlanets } = this.props;
       getPlanets();
     }
-  keyPress(e){
-    if(e.keyCode === "enter"){
-         this.setState({
-             loading: true
-         });
-         this.setState({
-             searchQuery:e.target.value
-         })
-  };
-}
+
+    handleChange=(e)=>{
+      this.setState({ [e.target.name]: e.target.value })
+    };
+
+    onSearch = (e) => { this.setState({ setSearch: true}) }
 
 
   renderTableData() {
-    if(this.props.planets.results.length > 0)
-      return this.props.planets.results.map((planet, data) => {
-          const { id, name, climate, population } = planet //destructuring
+    let { planets } = this.props;
+    let results = planets.results;
+    let { setSearch, search } = this.state;
+     try {
+       const searchRE = new RegExp(search, 'i');
+       if(setSearch) {
+         results = planets.results.filter(planet => {
+           return planet.name.match(searchRE)})
+         }
+       }
+       catch(err){ console.log(err) }
+    if(results.length > 0)
+      return results.map((planet, data) => {
+          const { name, climate, population } = planet //destructuring
           return (
             <tr key={data}>
-               <td>{planet.id}</td>
                <td>{planet.name}</td>
                <td>{planet.climate}</td>
                <td>{planet.population}</td>
@@ -57,34 +75,35 @@ class Planets extends React.Component{
 
   render(){
     const  { planets } = this.props;
-
-
     return(
-     <div className="container">
-           <div className="search-bar">
-       <input type="text" placeholder="Search..."/>
-       <div className="search"></div>
-           </div>
-            {planets.count ?
-         <div className="body-container">
-           <Table responsive  bordered hover>
-             <thead >
-               <tr>
-                 <th>Id</th>
-                 <th>Name</th>
-                 <th>Climate</th>
-                 <th>Population</th>
-               </tr>
-               </thead>
-               <tbody>
-               {this.renderTableData()}
-               </tbody>
-           </Table>
-
+     <div className="">
+         <div className="body-head">
+          <App />
+          <div className="search-bar">
+            <input type="text"  name='search' value={this.state.search} onChange={this.handleChange}  placeholder='search by name & gender' onKeyDown={(e) => this.onSearch(e)} />
+            <div className="search"></div>
+          </div>
          </div>
-       :
-       <p>loading</p>
-     }
+          <div className="container">
+           {planets.count ?
+           <div className="body-container">
+             <Table responsive  bordered hover>
+               <thead >
+                 <tr>
+                   <th>Name</th>
+                   <th>Climate</th>
+                   <th>Population</th>
+                 </tr>
+                 </thead>
+                 <tbody>
+                 {this.renderTableData()}
+                 </tbody>
+             </Table>
+           </div>
+         :
+         <p>loading</p>
+         }
+          </div>
      </div>
     );
   }
