@@ -1,9 +1,9 @@
 import request from '../../services/request';
 import endpoints from '../../services/endpoints';
 
-export const getStarships = () => {
+export const getStarships = (page) => {
   let options = {
-    ...endpoints.getStarships()
+    ...endpoints.getStarships(page)
   };
   return request.make(options)
 }

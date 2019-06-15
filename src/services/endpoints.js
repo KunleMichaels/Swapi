@@ -2,9 +2,9 @@ const baseUrl = 'https://swapi.co/api';
 
 export default {
   // People endpoints
-  "getPeople": () => {
+  "getPeople": (page) => {
       return {
-        "url": `${baseUrl}/people`,
+        "url": `${baseUrl}/people/?page=${page}`,
         "method": "GET",
       }
   },
@@ -15,9 +15,9 @@ export default {
     }
   },
   // Planet endpoints
-  "getPlanets": () => {
+  "getPlanets": (page) => {
     return {
-      "url": `${baseUrl}/planets`,
+      "url": `${baseUrl}/planets/?page=${page}`,
       "method": "GET",
     }
   },
@@ -28,9 +28,9 @@ export default {
     }
   },
   // Starships endpoints
-  "getStarships": () => {
+  "getStarships": (page) => {
     return {
-      "url": `${baseUrl}/starships`,
+      "url": `${baseUrl}/starships/?page=${page}`,
       "method": "GET",
     }
   },

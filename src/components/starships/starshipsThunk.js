@@ -1,10 +1,10 @@
 import * as actions from './starshipActions';
 import * as request from './starshipRequest';
 
-export const getStarships = () => {
+export const getStarships = (page=1) => {
   return dispatch => {
     dispatch(actions.getStarships());
-    request.getStarships().then((response) => {
+    request.getStarships(page).then((response) => {
       console.log("success", response);
       if(response.status = 200)
         dispatch(actions.getStarshipsSuccess(response.data));

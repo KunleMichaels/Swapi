@@ -1,10 +1,10 @@
 import * as actions from './planetActions';
 import * as request from './planetRequest';
 
-export const getPlanets = () => {
+export const getPlanets = (page=1) => {
   return dispatch => {
     dispatch(actions.getPlanets());
-    request.getPlanets().then((response) => {
+    request.getPlanets(page).then((response) => {
       console.log("success", response);
       if(response.status = 200 )
         dispatch(actions.getPlanetsSuccess(response.data));

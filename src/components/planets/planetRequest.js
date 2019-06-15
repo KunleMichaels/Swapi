@@ -1,9 +1,9 @@
 import request from '../../services/request';
 import endpoints from '../../services/endpoints';
 
-export const getPlanets = () => {
+export const getPlanets = (page) => {
   let options = {
-    ...endpoints.getPlanets()
+    ...endpoints.getPlanets(page)
   };
   return request.make(options)
 }

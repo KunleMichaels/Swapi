@@ -1,6 +1,7 @@
 import React from "react";
 //import components
 import App from "../App";
+import ButtonContainer from "../ButtonContainer";
 import { connect } from 'react-redux';
 import {  Table } from "react-bootstrap";
 import { getPlanets } from './planetsThunk';
@@ -75,6 +76,15 @@ class Planets extends React.Component{
 
   render(){
     const  { planets } = this.props;
+    let pagination;
+    if(planets.results){
+      pagination = {
+        count: planets.count,
+        next: planets.next,
+        previous: planets.previous,
+        size: planets.results.length
+      }
+    }
     return(
      <div className="">
          <div className="body-head">
@@ -99,6 +109,7 @@ class Planets extends React.Component{
                  {this.renderTableData()}
                  </tbody>
              </Table>
+              <ButtonContainer pagination={pagination} action={this.props.getPlanets} />
            </div>
          :
          <p>loading</p>
@@ -117,7 +128,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getPlanets: () => dispatch(getPlanets()),
+    getPlanets: (page) => dispatch(getPlanets(page)),
 
   }
 }

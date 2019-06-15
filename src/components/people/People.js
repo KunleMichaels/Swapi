@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import {  Table } from "react-bootstrap";
 import { getPeople } from './peopleThunk';
 import { Redirect } from 'react-router-dom';
+import Spinner from '../Spinner';
 
 
 //stylesheet
@@ -75,6 +76,15 @@ class People extends React.Component{
 
   render(){
     const  { people } = this.props;
+    let pagination;
+    if(people.results){
+      pagination = {
+        count: people.count,
+        next: people.next,
+        previous: people.previous,
+        size: people.results.length
+      }
+    }
     return(
      <div className="">
          <div className="body-head">
@@ -99,10 +109,10 @@ class People extends React.Component{
                 {this.renderTableData()}
               </tbody>
               </Table>
-              <ButtonContainer />
+              <ButtonContainer pagination={pagination} action={this.props.getPeople} />
              </div>
                 :
-                <p>loading</p>
+                <Spinner />
                 }
          </div>
      </div>
@@ -118,7 +128,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getPeople: () => dispatch(getPeople()),
+    getPeople: (page) => dispatch(getPeople(page)),
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(People);

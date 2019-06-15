@@ -3,18 +3,19 @@ import { Pagination } from "react-bootstrap";
 
 class ButtonContainer extends React.Component{
   render(){
+    const { pagination, action } = this.props;
+    const totalItems = Math.ceil(pagination.count / 10)
+    const items = []
+    for(let i=1; i <= totalItems; i++){
+      items.push(<Pagination.Item key={i} onClick={() => action(i)}>{i}</Pagination.Item>)
+    }
     return(
       <div>
-      <Pagination>
-        <Pagination.First />
-        <Pagination.Prev />
-        <Pagination.Item active>{1}</Pagination.Item>
-        <Pagination.Ellipsis />
-  
-        <Pagination.Item>{20}</Pagination.Item>
-        <Pagination.Next />
-        <Pagination.Last />
-      </Pagination>
+        <Pagination>
+          <Pagination.Prev />
+          {items}
+          <Pagination.Next />
+        </Pagination>
       </div>
     );
   }
