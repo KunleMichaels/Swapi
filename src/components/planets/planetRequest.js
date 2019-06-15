@@ -14,3 +14,10 @@ export const getPlanet = (id) => {
   };
   return request.make(options)
 }
+
+export const getPage = (url) => {
+  let options = {
+    ...endpoints.getPage(url)
+  };
+  return request.make(options)
+}

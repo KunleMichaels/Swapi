@@ -63,9 +63,9 @@ class Starships extends React.Component{
          const { name, model, cargo_capacity } = starship //destructuring
          return (
             <tr key={data}>
-               <td>{starship.name}</td>
-               <td>{starship.model}</td>
-               <td>{starship.cargo_capacity}</td>
+               <td>{name}</td>
+               <td>{model}</td>
+               <td>{cargo_capacity}</td>
             </tr>
          )
       })

@@ -64,9 +64,9 @@ class Planets extends React.Component{
           const { name, climate, population } = planet //destructuring
           return (
             <tr key={data}>
-               <td>{planet.name}</td>
-               <td>{planet.climate}</td>
-               <td>{planet.population}</td>
+               <td>{name}</td>
+               <td>{climate}</td>
+               <td>{population}</td>
             </tr>
          )
         })

@@ -4,7 +4,7 @@ import App from "../App";
 import ButtonContainer from "../ButtonContainer";
 import { connect } from 'react-redux';
 import {  Table } from "react-bootstrap";
-import { getPeople } from './peopleThunk';
+import { getPeople, getPage } from './peopleThunk';
 import { Redirect } from 'react-router-dom';
 import Spinner from '../Spinner';
 
@@ -109,7 +109,7 @@ class People extends React.Component{
                 {this.renderTableData()}
               </tbody>
               </Table>
-              <ButtonContainer pagination={pagination} action={this.props.getPeople} />
+              <ButtonContainer pagination={pagination} action={this.props.getPeople} getPage={this.props.getPage}/>
              </div>
                 :
                 <Spinner />
@@ -129,6 +129,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getPeople: (page) => dispatch(getPeople(page)),
+    getPage: (url) => dispatch(getPage(url)),
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(People);

@@ -3,7 +3,7 @@ import { Pagination } from "react-bootstrap";
 
 class ButtonContainer extends React.Component{
   render(){
-    const { pagination, action } = this.props;
+    const { pagination, action, getPage } = this.props;
     const totalItems = Math.ceil(pagination.count / 10)
     const items = []
     for(let i=1; i <= totalItems; i++){
@@ -12,9 +12,9 @@ class ButtonContainer extends React.Component{
     return(
       <div>
         <Pagination>
-          <Pagination.Prev />
+          <Pagination.Prev disabled={pagination.previous ?  false : true} onClick={() => getPage(pagination.previous)}/>
           {items}
-          <Pagination.Next />
+          <Pagination.Next disabled={pagination.next ?  false : true} onClick={() => getPage(pagination.next)}/>
         </Pagination>
       </div>
     );

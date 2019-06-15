@@ -40,4 +40,10 @@ export default {
       "method": "GET",
     }
   },
+  "getPage": (url) => {
+    return {
+      "url": `${url}`,
+      "method": "GET",
+    }
+  }
 }
